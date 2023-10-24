@@ -1,12 +1,17 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use camelCase" #-}
+{-# HLINT ignore "Eta reduce" #-}
 module Nat where
 
 import Prelude
-    hiding ((+), (-), (*), (^), pred, double, fact, fib, min, max, quot, rem)
+    hiding ((+), (-), (*), (^), pred, double, fact, fib, min, max, quot, rem, length, elem, sum, product, (++), reverse,
+    allEven, anyEven, allOdd, anyOdd, allZero, anyZero, addNat, mulNat, expNat, enumFromTo, take, drop)
 
 data Nat = O | S Nat
     deriving ( Eq , Show )
+
+data ListNat = Empty | Cons Nat ListNat
+    deriving ( Eq, Show )
 
 if_then_else :: Bool -> a -> a -> a
 if_then_else True n m = n
@@ -86,8 +91,84 @@ isMul₃ (S (S O)) = False
 isMul₃ (S(S (S n))) = isMul₃ n
 
 divides :: Nat -> Nat -> Bool
-divides n m = if_then_else (quot n m == O) True False
+divides n m = if_then_else (rem n m == O) True False
 
 isZero :: Nat -> Bool
 isZero O = True
 isZero (S n) = False
+
+length :: ListNat -> Nat
+length Empty = O
+length (Cons x xs) = S(length xs)
+
+elem :: Nat -> ListNat -> Bool
+elem n Empty = False
+elem n (Cons x xs) = if_then_else (n == x) True (elem n xs)
+
+sum :: ListNat -> Nat
+sum Empty = O
+sum (Cons x xs) = x + sum xs
+
+product :: ListNat -> Nat
+product Empty = S O
+product (Cons x xs) = x * product xs
+
+(++) :: ListNat -> ListNat -> ListNat
+Empty ++ xs = xs
+xs ++ Empty = xs
+(Cons x xs) ++ ys = Cons x (xs ++ ys)
+
+reverse :: ListNat -> ListNat
+reverse Empty = Empty
+reverse (Cons x xs) = xs ++ Cons x Empty
+
+allEven :: ListNat -> Bool
+allEven Empty = True
+allEven (Cons x xs) = if_then_else (ev x) (allEven xs) False
+
+anyEven :: ListNat -> Bool
+anyEven Empty = False
+anyEven (Cons x xs) = if_then_else (ev x) True (anyEven xs)
+
+allOdd :: ListNat -> Bool
+allOdd Empty = True
+allOdd (Cons x xs) = if_then_else (od x) (allOdd xs) False
+
+anyOdd :: ListNat -> Bool
+anyOdd Empty = False
+anyOdd (Cons x xs) = if_then_else (od x) True (anyOdd xs)
+
+allZero :: ListNat -> Bool
+allZero Empty = True
+allZero (Cons x xs) = if_then_else (isZero x) (allZero xs) False
+
+anyZero :: ListNat -> Bool
+anyZero Empty = False
+anyZero (Cons x xs) = if_then_else (isZero x) True (anyZero xs)
+
+addNat :: Nat -> ListNat -> ListNat
+addNat n Empty = Empty
+addNat n (Cons m ms) = Cons (n + m) (addNat n ms)
+
+mulNat :: Nat -> ListNat -> ListNat
+mulNat n Empty = Empty
+mulNat n (Cons m ms) = Cons (n * m) (mulNat n ms)
+
+expNat :: Nat -> ListNat -> ListNat
+expNat n Empty = Empty
+expNat n (Cons m ms) = Cons (n ^ m) (expNat n ms)
+
+enumFromTo :: Nat -> Nat -> ListNat
+enumFromTo n n = Cons n Empty
+enumFromTo n m = Cons n (enumFromTo (S n) m)
+
+enumTo :: Nat -> ListNat
+enumTo n = enumFromTo O n
+
+take :: Nat -> ListNat -> ListNat
+take n Empty = Empty
+take (S n) (Cons x xs) = Cons x (take n xs)
+
+drop :: Nat -> ListNat -> ListNat
+drop O l = l
+drop (S n) (Cons x xs) = drop n xs
