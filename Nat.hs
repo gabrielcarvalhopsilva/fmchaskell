@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use camelCase" #-}
 module Nat where
 
 import Prelude
@@ -5,6 +7,10 @@ import Prelude
 
 data Nat = O | S Nat
     deriving ( Eq , Show )
+
+if_then_else :: Bool -> a -> a -> a
+if_then_else True n m = n
+if_then_else False n m = m
 
 (+) :: Nat -> Nat -> Nat
 n + O = n
@@ -57,3 +63,31 @@ quot n m = S(quot (n-m) n)
 rem :: Nat -> Nat -> Nat
 rem O n = O
 rem n m = n - (quot n m * m)
+
+leq :: Nat -> Nat -> Bool
+leq O n = True
+leq n O = False
+leq (S n) (S m) = leq n m
+
+ev :: Nat -> Bool
+ev O = True
+ev (S O) = False
+ev (S(S n)) = ev n
+
+od :: Nat -> Bool
+od O = False
+od (S O) = True
+od (S(S n )) = od n
+
+isMul₃ :: Nat -> Bool
+isMul₃ O = True
+isMul₃ (S O) = False
+isMul₃ (S (S O)) = False
+isMul₃ (S(S (S n))) = isMul₃ n
+
+divides :: Nat -> Nat -> Bool
+divides n m = if_then_else (quot n m == O) True False
+
+isZero :: Nat -> Bool
+isZero O = True
+isZero (S n) = False
