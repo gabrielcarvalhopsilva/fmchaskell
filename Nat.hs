@@ -120,7 +120,7 @@ xs ++ Empty = xs
 
 reverse :: ListNat -> ListNat
 reverse Empty = Empty
-reverse (Cons x xs) = xs ++ Cons x Empty
+reverse (Cons x xs) = reverse xs ++ x
 
 allEven :: ListNat -> Bool
 allEven Empty = True
