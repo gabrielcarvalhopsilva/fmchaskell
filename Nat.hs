@@ -170,5 +170,24 @@ take n Empty = Empty
 take (S n) (Cons x xs) = Cons x (take n xs)
 
 drop :: Nat -> ListNat -> ListNat
+drop n Empty = Empty
 drop O l = l
 drop (S n) (Cons x xs) = drop n xs
+///
+elemIndices :: Nat → ListNat → ListNat
+elemIndices n Empty = Empty
+elemIndices n (Cons n ns) = Cons n (elemIndices n ns)
+
+pwAdd :: ListNat → ListNat → ListNat
+pwAdd Empty xs = xs
+pwAdd xs Empty = Empty
+pwAdd (Cons n ns) (Cons m ms) = Cons (n + m) (pwAdd ns ms)
+
+pwMul :: ListNat → ListNat → ListNat
+pwMul Empty xs = xs
+pwMul xs Empty = Empty
+pwMul (Cons n ns) (Cons m ms) = Cons (n * m) (pwMul ns ms)
+
+isSorted :: ListNat → Bool
+isSorted Empty = True
+isSorted
