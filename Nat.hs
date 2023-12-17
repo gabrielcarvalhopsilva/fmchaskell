@@ -1,6 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Use camelCase" #-}
-{-# HLINT ignore "Eta reduce" #-}
 module Nat where
 
 import Prelude
@@ -28,7 +25,7 @@ O - n = O
 
 (*) :: Nat -> Nat -> Nat
 n * O = O
-n * (S m) = n + n * m
+n * S m = (n * m) + n
 
 (^) :: Nat -> Nat -> Nat
 n ^ O = S O
@@ -118,9 +115,13 @@ Empty ++ xs = xs
 xs ++ Empty = xs
 (Cons x xs) ++ ys = Cons x (xs ++ ys)
 
+append :: Nat -> ListNat -> ListNat
+append n Empty = Cons n Empty
+append n (Cons x xs) = Cons x (append n xs)
+
 reverse :: ListNat -> ListNat
 reverse Empty = Empty
-reverse (Cons x xs) = reverse xs ++ x
+reverse (Cons x xs) = append x (reverse xs)
 
 allEven :: ListNat -> Bool
 allEven Empty = True
@@ -158,12 +159,12 @@ expNat :: Nat -> ListNat -> ListNat
 expNat n Empty = Empty
 expNat n (Cons m ms) = Cons (n ^ m) (expNat n ms)
 
-enumFromTo :: Nat -> Nat -> ListNat
-enumFromTo n n = Cons n Empty
-enumFromTo n m = Cons n (enumFromTo (S n) m)
+--enumFromTo :: Nat -> Nat -> ListNat
+--enumFromTo n n = Cons n Empty
+--enumFromTo n m = Cons n (enumFromTo (S n) m)
 
-enumTo :: Nat -> ListNat
-enumTo n = enumFromTo O n
+--enumTo :: Nat -> ListNat
+--enumTo n = enumFromTo O n
 
 take :: Nat -> ListNat -> ListNat
 take n Empty = Empty
@@ -173,21 +174,17 @@ drop :: Nat -> ListNat -> ListNat
 drop n Empty = Empty
 drop O l = l
 drop (S n) (Cons x xs) = drop n xs
-///
-elemIndices :: Nat → ListNat → ListNat
-elemIndices n Empty = Empty
-elemIndices n (Cons n ns) = Cons n (elemIndices n ns)
 
-pwAdd :: ListNat → ListNat → ListNat
+--elemIndices :: Nat -> ListNat -> ListNat
+--elemIndices n Empty = Empty
+--elemIndices n (Cons n ns) = Cons n (elemIndices n ns)
+
+pwAdd :: ListNat -> ListNat -> ListNat
 pwAdd Empty xs = xs
 pwAdd xs Empty = Empty
 pwAdd (Cons n ns) (Cons m ms) = Cons (n + m) (pwAdd ns ms)
 
-pwMul :: ListNat → ListNat → ListNat
+pwMul :: ListNat -> ListNat -> ListNat
 pwMul Empty xs = xs
 pwMul xs Empty = Empty
 pwMul (Cons n ns) (Cons m ms) = Cons (n * m) (pwMul ns ms)
-
-isSorted :: ListNat → Bool
-isSorted Empty = True
-isSorted
